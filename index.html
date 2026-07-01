@@ -1,26 +1,108 @@
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto Tool</title>
     <style>
-        body {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            text-align: center; font-family: sans-serif;
-        }
-        textarea { padding: 8px; font-family: monospace; }
-        #pwd { font-family: monospace; text-align: center; }
-        .hint { color: #888; font-size: 13px; margin-top: 6px; }
-    </style>
+        :root {
+    color-scheme: light dark;
+    --sk-body-background: #fff;
+    --sk-body-text: rgb(29, 29, 31);
+    --sk-link: rgb(0, 102, 204);
+    --sk-code-background: rgba(0, 0, 0, 0.05);
+    --sk-input-bg: #ffffff;
+    --sk-input-text: rgb(29, 29, 31);
+    --sk-input-border: rgba(0, 0, 0, 0.2);
+    --sk-btn-bg: #f5f5f7;
+    --sk-btn-hover: #e8e8ed;
+}
+@media (prefers-color-scheme: dark) {
+    :root {
+        --sk-body-background: rgb(0, 0, 0);
+        --sk-body-text: rgb(245, 245, 247);
+        --sk-link: rgb(41, 151, 255);
+        --sk-code-background: rgba(255, 255, 255, 0.1);
+        --sk-input-bg: rgb(28, 28, 30);
+        --sk-input-text: rgb(245, 245, 247);
+        --sk-input-border: rgba(255, 255, 255, 0.24);
+        --sk-btn-bg: rgb(44, 44, 46);
+        --sk-btn-hover: rgb(58, 58, 60);
+    }
+}
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    box-sizing: border-box;
+}
+body {
+    font-family: "SF Pro Display", "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-size: 17px;
+    line-height: 1.4;
+    color: var(--sk-body-text);
+    background: var(--sk-body-background);
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px 22px;
+}
+input[type="text"], textarea {
+    width: 100%;
+    background-color: var(--sk-input-bg);
+    color: var(--sk-input-text);
+    border: 1px solid var(--sk-input-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: inherit;
+    font-size: 16px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.2s ease;
+    color-scheme: inherit; 
+}
+input[type="text"]:focus, textarea:focus {
+    border-color: var(--sk-link);
+}
+.pwd-container {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+.pwd-container input {
+    margin-bottom: 0;
+    flex: 1;
+}
+button {
+    background-color: var(--sk-btn-bg);
+    color: var(--sk-body-text);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+button:hover {
+    background-color: var(--sk-btn-hover);
+}
+.crypto-actions {
+    display: flex;
+    gap: 12px;
+}
+</style>
 </head>
 <body>
-    Password: <input id="pwd" type="text" size="30" placeholder="">
-    <button onclick="generatePassword()">Generate</button>
-    <button id="copyBtn" onclick="copyPassword()">Copy</button>
-    <br>
-    <br>
-    <textarea id="txt" rows="8" cols="64" placeholder="Plaintext to encrypt, ciphertext to decrypt"></textarea><br><br>
-    <button onclick="executeCrypto(true)">Encrypt</button>
-    <button onclick="executeCrypto(false)">Decrypt</button>
+    <div class="pwd-container">
+        <input id="pwd" type="text" placeholder="Enter password or generate one">
+        <button onclick="generatePassword()">Generate</button>
+        <button id="copyBtn" onclick="copyPassword()">Copy</button>
+    </div>
+    <textarea id="txt" rows="8" placeholder="Plaintext to encrypt, ciphertext to decrypt"></textarea>
+    <div class="crypto-actions">
+        <button onclick="executeCrypto(true)" style="background-color: var(--sk-link); color: #fff;">Encrypt</button>
+        <button onclick="executeCrypto(false)">Decrypt</button>
+    </div>
     <script>
         var subtle = crypto.subtle || crypto.webkitSubtle;
         var encoder = new TextEncoder();
@@ -31,7 +113,7 @@
             for (var i = 0; i < 10; i++) {
                 hex += (bytes[i] >> 4).toString(16) + (bytes[i] & 15).toString(16);
             }
-            document.getElementById('pwd').value = hex.toUpperCase().match(/.{1,5}/g).join('-');
+            document.getElementById('pwd').value = hex.toUpperCase().match(/.{1,4}/g).join('-');
         }
         function copyPassword() {
             var field = document.getElementById('pwd');
