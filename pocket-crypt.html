@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            text-align: center; font-family: sans-serif;
+        }
+        textarea { padding: 8px; font-family: monospace; }
+    </style>
+</head>
+<body>
+    Password: <input id="pwd" type="password" size="40">
+    <label>
+        <input type="checkbox" onclick="document.getElementById('pwd').type = this.checked ? 'text' : 'password'">
+        Show password
+    </label>
+    <br><br>
+    <textarea id="txt" rows="8" cols="64" placeholder="Plaintext to encrypt, ciphertext to decrypt"></textarea><br><br>
+    <button onclick="executeCrypto(true)">Encrypt</button>
+    <button onclick="executeCrypto(false)">Decrypt</button>
+    <script>
+        var subtle = crypto.subtle || crypto.webkitSubtle;
+        var encoder = new TextEncoder();
+        var decoder = new TextDecoder();
+        function deriveAesKey(password, salt) {
+            return subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey'])
+                .then(function(baseKey) {
+                    return subtle.deriveKey(
+                        { name: 'PBKDF2', salt: salt, iterations: 600000, hash: 'SHA-256' },
+                        baseKey,
+                        { name: 'AES-GCM', length: 256 },
+                        false,
+                        ['encrypt', 'decrypt']
+                    );
+                });
+        }
+        function toBase64(bytes) {
+            var str = '';
+            for (var i = 0; i < bytes.length; i++) str += String.fromCharCode(bytes[i]);
+            return btoa(str);
+        }
+        function fromBase64(str) {
+            var binaryStr = atob(str.trim());
+            var bytes = new Uint8Array(binaryStr.length);
+            for (var i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+            return bytes;
+        }
+        function executeCrypto(isEncrypt) {
+            var password = document.getElementById('pwd').value;
+            var textArea = document.getElementById('txt');
+            var textContent = textArea.value;
+            if (!password || !textContent) {
+                return alert('Password and text are required');
+            }
+            if (isEncrypt) {
+                var salt = crypto.getRandomValues(new Uint8Array(16));
+                var iv = crypto.getRandomValues(new Uint8Array(12));
+                deriveAesKey(password, salt).then(function(aesKey) {
+                    return subtle.encrypt({ name: 'AES-GCM', iv: iv }, aesKey, encoder.encode(textContent));
+                }).then(function(cipherBuffer) {
+                    var payload = new Uint8Array(28 + cipherBuffer.byteLength);
+                    payload.set(salt, 0);
+                    payload.set(iv, 16);
+                    payload.set(new Uint8Array(cipherBuffer), 28);
+                    textArea.value = toBase64(payload);
+                }).catch(function() {
+                    alert('Encryption failed');
+                });
+            } else {
+                try {
+                    var payload = fromBase64(textContent);
+                    var salt = payload.slice(0, 16);
+                    var iv = payload.slice(16, 28);
+                    var cipherData = payload.slice(28);
+                } catch (e) {
+                    return alert('Invalid ciphertext format');
+                }
+                deriveAesKey(password, salt).then(function(aesKey) {
+                    return subtle.decrypt({ name: 'AES-GCM', iv: iv }, aesKey, cipherData);
+                }).then(function(plainBuffer) {
+                    textArea.value = decoder.decode(plainBuffer);
+                }).catch(function() {
+                    alert('Decryption failed: wrong password or corrupted data');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
