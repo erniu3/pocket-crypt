@@ -42,9 +42,6 @@
             btn.textContent = 'Copied✅';
             setTimeout(function() { btn.textContent = 'Copy'; }, 1200);
         }
-        function normalizePassword(raw) {
-            return raw.replace(/[^0-9a-fA-F]/g, '').toUpperCase();
-        }
         function deriveAesKey(password, salt) {
             return subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey'])
                 .then(function(baseKey) {
@@ -69,11 +66,11 @@
             return bytes;
         }
         function executeCrypto(isEncrypt) {
-            var password = normalizePassword(document.getElementById('pwd').value);
+            var password = document.getElementById('pwd').value;
             var textArea = document.getElementById('txt');
             var textContent = textArea.value;
-            if (password.length !== 20) {
-                return alert('Password must be a generated 20-digit hex code. Click Generate, or paste the code you received.');
+            if (!password) {
+                return alert('Please enter a custom password or click Generate.');
             }
             if (!textContent) {
                 return alert('Text cannot be empty');
