@@ -1,97 +1,110 @@
-
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crypto Tool</title>
     <style>
         :root {
-    color-scheme: light dark;
-    --sk-body-background: #fff;
-    --sk-body-text: rgb(29, 29, 31);
-    --sk-link: rgb(0, 102, 204);
-    --sk-code-background: rgba(0, 0, 0, 0.05);
-    --sk-input-bg: #ffffff;
-    --sk-input-text: rgb(29, 29, 31);
-    --sk-input-border: rgba(0, 0, 0, 0.2);
-    --sk-btn-bg: #f5f5f7;
-    --sk-btn-hover: #e8e8ed;
-}
-@media (prefers-color-scheme: dark) {
-    :root {
-        --sk-body-background: rgb(0, 0, 0);
-        --sk-body-text: rgb(245, 245, 247);
-        --sk-link: rgb(41, 151, 255);
-        --sk-code-background: rgba(255, 255, 255, 0.1);
-        --sk-input-bg: rgb(28, 28, 30);
-        --sk-input-text: rgb(245, 245, 247);
-        --sk-input-border: rgba(255, 255, 255, 0.24);
-        --sk-btn-bg: rgb(44, 44, 46);
-        --sk-btn-hover: rgb(58, 58, 60);
-    }
-}
-* {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    box-sizing: border-box;
-}
-body {
-    font-family: "SF Pro Display", "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-    font-size: 17px;
-    line-height: 1.4;
-    color: var(--sk-body-text);
-    background: var(--sk-body-background);
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 40px 22px;
-}
-input[type="text"], textarea {
-    width: 100%;
-    background-color: var(--sk-input-bg);
-    color: var(--sk-input-text);
-    border: 1px solid var(--sk-input-border);
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-family: inherit;
-    font-size: 16px;
-    margin-bottom: 12px;
-    outline: none;
-    transition: border-color 0.2s ease;
-    color-scheme: inherit; 
-}
-input[type="text"]:focus, textarea:focus {
-    border-color: var(--sk-link);
-}
-.pwd-container {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-}
-.pwd-container input {
-    margin-bottom: 0;
-    flex: 1;
-}
-button {
-    background-color: var(--sk-btn-bg);
-    color: var(--sk-body-text);
-    border: none;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-button:hover {
-    background-color: var(--sk-btn-hover);
-}
-.crypto-actions {
-    display: flex;
-    gap: 12px;
-}
-</style>
+            color-scheme: light dark;
+            --sk-body-background: #fff;
+            --sk-body-text: rgb(29, 29, 31);
+            --sk-link: rgb(0, 102, 204);
+            --sk-code-background: rgba(0, 0, 0, 0.05);
+            --sk-input-bg: #ffffff;
+            --sk-input-text: rgb(29, 29, 31);
+            --sk-input-border: rgba(0, 0, 0, 0.2);
+            --sk-btn-bg: #f5f5f7;
+            --sk-btn-hover: #e8e8ed;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --sk-body-background: rgb(0, 0, 0);
+                --sk-body-text: rgb(245, 245, 247);
+                --sk-link: rgb(41, 151, 255);
+                --sk-code-background: rgba(255, 255, 255, 0.1);
+                --sk-input-bg: rgb(28, 28, 30);
+                --sk-input-text: rgb(245, 245, 247);
+                --sk-input-border: rgba(255, 255, 255, 0.24);
+                --sk-btn-bg: rgb(44, 44, 46);
+                --sk-btn-hover: rgb(58, 58, 60);
+            }
+        }
+
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "SF Pro Display", "SF Pro Icons", "PingFang SC", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+            font-size: 17px;
+            line-height: 1.4;
+            color: var(--sk-body-text);
+            background: var(--sk-body-background);
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 22px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            background-color: var(--sk-input-bg);
+            color: var(--sk-input-text);
+            border: 1px solid var(--sk-input-border);
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: inherit;
+            font-size: 16px;
+            margin-bottom: 12px;
+            outline: none;
+            transition: border-color 0.2s ease;
+            color-scheme: inherit;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            border-color: var(--sk-link);
+        }
+
+        .pwd-container {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .pwd-container input {
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        button {
+            background-color: var(--sk-btn-bg);
+            color: var(--sk-body-text);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: var(--sk-btn-hover);
+        }
+
+        .crypto-actions {
+            display: flex;
+            gap: 12px;
+        }
+    </style>
 </head>
+
 <body>
     <div class="pwd-container">
         <input id="pwd" type="text" placeholder="Enter password or generate one">
@@ -122,11 +135,11 @@ button:hover {
             document.execCommand('copy');
             var btn = document.getElementById('copyBtn');
             btn.textContent = 'Copied✅';
-            setTimeout(function() { btn.textContent = 'Copy'; }, 1200);
+            setTimeout(function () { btn.textContent = 'Copy'; }, 1200);
         }
         function deriveAesKey(password, salt) {
             return subtle.importKey('raw', encoder.encode(password), 'PBKDF2', false, ['deriveKey'])
-                .then(function(baseKey) {
+                .then(function (baseKey) {
                     return subtle.deriveKey(
                         { name: 'PBKDF2', salt: salt, iterations: 600000, hash: 'SHA-256' },
                         baseKey,
@@ -160,15 +173,15 @@ button:hover {
             if (isEncrypt) {
                 var salt = crypto.getRandomValues(new Uint8Array(16));
                 var iv = crypto.getRandomValues(new Uint8Array(12));
-                deriveAesKey(password, salt).then(function(aesKey) {
+                deriveAesKey(password, salt).then(function (aesKey) {
                     return subtle.encrypt({ name: 'AES-GCM', iv: iv }, aesKey, encoder.encode(textContent));
-                }).then(function(cipherBuffer) {
+                }).then(function (cipherBuffer) {
                     var payload = new Uint8Array(28 + cipherBuffer.byteLength);
                     payload.set(salt, 0);
                     payload.set(iv, 16);
                     payload.set(new Uint8Array(cipherBuffer), 28);
                     textArea.value = toBase64(payload);
-                }).catch(function() {
+                }).catch(function () {
                     alert('Encryption failed');
                 });
             } else {
@@ -180,15 +193,16 @@ button:hover {
                 } catch (e) {
                     return alert('Invalid ciphertext format');
                 }
-                deriveAesKey(password, salt).then(function(aesKey) {
+                deriveAesKey(password, salt).then(function (aesKey) {
                     return subtle.decrypt({ name: 'AES-GCM', iv: iv }, aesKey, cipherData);
-                }).then(function(plainBuffer) {
+                }).then(function (plainBuffer) {
                     textArea.value = decoder.decode(plainBuffer);
-                }).catch(function() {
+                }).catch(function () {
                     alert('Decryption failed: wrong password or corrupted data');
                 });
             }
         }
     </script>
 </body>
+
 </html>
