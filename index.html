@@ -107,6 +107,14 @@
             display: flex;
             gap: 12px;
         }
+
+        .pwd-hint {
+            font-size: 13px;
+            line-height: 1.4;
+            color: var(--sk-body-text);
+            opacity: 0.55;
+            margin: 0 0 16px;
+        }
     </style>
 </head>
 
@@ -116,6 +124,7 @@
         <button onclick="generatePassword()">Generate</button>
         <button id="copyBtn" onclick="copyPassword()">Copy</button>
     </div>
+    <p class="pwd-hint">Generated passwords use the RFC 4648 Base32 alphabet (A–Z, 2–7). No 0, 1, 8 or 9, so there's no confusion between characters like 0/O or 1/I.</p>
     <textarea id="txt" rows="8" placeholder="Plaintext to encrypt, ciphertext to decrypt"></textarea>
     <div class="crypto-actions">
         <button onclick="executeCrypto(true)" style="background-color: var(--sk-link); color: #fff;">Encrypt</button>
