@@ -66,11 +66,6 @@
             color-scheme: inherit;
         }
 
-        #pwd {
-            font-family: "SF Mono", "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;
-            letter-spacing: 0.08em;
-        }
-
         input[type="text"]:focus,
         textarea:focus {
             border-color: var(--sk-link);
@@ -107,14 +102,6 @@
             display: flex;
             gap: 12px;
         }
-
-        .pwd-hint {
-            font-size: 13px;
-            line-height: 1.4;
-            color: var(--sk-body-text);
-            opacity: 0.55;
-            margin: 0 0 16px;
-        }
     </style>
 </head>
 
@@ -124,7 +111,6 @@
         <button onclick="generatePassword()">Generate</button>
         <button id="copyBtn" onclick="copyPassword()">Copy</button>
     </div>
-    <p class="pwd-hint">Generated passwords use the RFC 4648 Base32 alphabet (A–Z, 2–7). No 0, 1, 8 or 9, so there's no confusion between characters like 0/O or 1/I.</p>
     <textarea id="txt" rows="8" placeholder="Plaintext to encrypt, ciphertext to decrypt"></textarea>
     <div class="crypto-actions">
         <button onclick="executeCrypto(true)" style="background-color: var(--sk-link); color: #fff;">Encrypt</button>
@@ -134,22 +120,20 @@
         var subtle = crypto.subtle || crypto.webkitSubtle;
         var encoder = new TextEncoder();
         var decoder = new TextDecoder();
-        // RFC 4648 Base32 alphabet: A-Z 2-7 (no 0/1/8/9, so no 0/O or 1/I/l confusion)
-        var BASE32 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
         function generatePassword() {
-            // 80 bits of entropy -> 16 Base32 chars (5 bits each) -> 4 groups of 4
-            var bytes = crypto.getRandomValues(new Uint8Array(10));
-            var chars = '';
-            var buffer = 0, bits = 0;
-            for (var i = 0; i < 10; i++) {
-                buffer = (buffer << 8) | bytes[i];
-                bits += 8;
-                while (bits >= 5) {
-                    bits -= 5;
-                    chars += BASE32[(buffer >> bits) & 31];
+            // Digits only (0-9). 24 digits ~= 79.7 bits of entropy (log2(10) per digit).
+            // Rejection sampling: only use bytes 0-249, so each maps uniformly to 0-9 (no modulo bias).
+            var digits = '';
+            while (digits.length < 24) {
+                var buf = crypto.getRandomValues(new Uint8Array(24));
+                for (var i = 0; i < buf.length && digits.length < 24; i++) {
+                    if (buf[i] < 250) {
+                        digits += (buf[i] % 10).toString();
+                    }
                 }
             }
-            document.getElementById('pwd').value = chars.match(/.{1,4}/g).join('-');
+            // 24 digits -> 6 groups of 4
+            document.getElementById('pwd').value = digits.match(/.{1,4}/g).join('-');
         }
         function copyPassword() {
             var field = document.getElementById('pwd');
