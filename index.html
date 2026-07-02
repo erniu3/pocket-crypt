@@ -66,6 +66,11 @@
             color-scheme: inherit;
         }
 
+        #pwd {
+            font-family: "SF Mono", "Menlo", "Consolas", "Liberation Mono", "Courier New", monospace;
+            letter-spacing: 0.08em;
+        }
+
         input[type="text"]:focus,
         textarea:focus {
             border-color: var(--sk-link);
@@ -120,13 +125,22 @@
         var subtle = crypto.subtle || crypto.webkitSubtle;
         var encoder = new TextEncoder();
         var decoder = new TextDecoder();
+        // RFC 4648 Base32 alphabet: A-Z 2-7 (no 0/1/8/9, so no 0/O or 1/I/l confusion)
+        var BASE32 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
         function generatePassword() {
+            // 80 bits of entropy -> 16 Base32 chars (5 bits each) -> 4 groups of 4
             var bytes = crypto.getRandomValues(new Uint8Array(10));
-            var hex = '';
+            var chars = '';
+            var buffer = 0, bits = 0;
             for (var i = 0; i < 10; i++) {
-                hex += (bytes[i] >> 4).toString(16) + (bytes[i] & 15).toString(16);
+                buffer = (buffer << 8) | bytes[i];
+                bits += 8;
+                while (bits >= 5) {
+                    bits -= 5;
+                    chars += BASE32[(buffer >> bits) & 31];
+                }
             }
-            document.getElementById('pwd').value = hex.toUpperCase().match(/.{1,4}/g).join('-');
+            document.getElementById('pwd').value = chars.match(/.{1,4}/g).join('-');
         }
         function copyPassword() {
             var field = document.getElementById('pwd');
